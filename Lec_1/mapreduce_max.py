@@ -1,7 +1,7 @@
 from mrjob.job import MRJob
 from mrjob.step import MRStep
 
-class MapReduceAverage(MRJob):
+class MapReduceMax(MRJob):
     def mapper(self, _, line):
         if 'status_id' not in line:
             data = line.split(',') # Data is a list of values in each line of a file
@@ -29,4 +29,4 @@ class MapReduceAverage(MRJob):
                         MRStep(reducer = self.reducer_max)]
     
 if (__name__ == '__main__'):
-    MapReduceAverage.run()
+    MapReduceMax.run()
