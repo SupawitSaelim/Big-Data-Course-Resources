@@ -9,7 +9,7 @@ read_file = spark.read.format("csv")\
     .load("fb_live_thailand.csv")
 
 # Select specific columns
-sqlDF = read_file.select("column1", "column2")
+sqlDF = read_file.select("status_published", "num_reactions")
 
 # Show result
 sqlDF.show(10)  # Replace 10 with the number of rows you want to display

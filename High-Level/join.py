@@ -19,7 +19,7 @@ sqlDF2 = spark.sql("SELECT * FROM table2")
 join_column = sqlDF1["num_reactions"] == sqlDF2["status_published"]
 
 # ทำการ Join ข้อมูลระหว่างสอง DataFrames โดยใช้คอลัมน์ที่จับคู่
-joined_df = sqlDF1.join(sqlDF2, join_column, "inner")  # ใช้ "inner" join เป็นตัวอย่าง
+joined_df = sqlDF1.join(sqlDF2, join_column, "inner")  # ใช้ "inner" join เป็นตัวอย่าง มี outer, left, right อีกและ left_outer, right_outer, full, full_outer
 
 # แสดงผลลัพธ์
 joined_df.show()
