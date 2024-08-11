@@ -1,16 +1,12 @@
 from mrjob.job import MRJob
 from mrjob.step import MRStep
 
-class MapReduceInvertedIndex(MRJob):
+class MapReduceJoin(MRJob):
     def mapper(self, _, line):
         if 'status_id' not in line:
-            data = line.split(',') # Data is a list of values in each line of a file
-            
+            data = line.split(',')  
             id = data[1]
-
             yield id, data
-
-
 
     def reducer(self, key, values):
         file_1 = []
@@ -24,8 +20,6 @@ class MapReduceInvertedIndex(MRJob):
         for i in file_1:
             for j in file_2:
                 yield None, (i+j)
-
-        
     
 if (__name__ == '__main__'):
-    MapReduceInvertedIndex.run()
+    MapReduceJoin.run()
