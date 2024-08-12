@@ -1,9 +1,13 @@
 from pyspark.sql import SparkSession
 
+# สร้าง SparkSession
 spark = SparkSession.builder.getOrCreate()
 
+# สร้าง RDD แรก
 alphabet1 = [('a', 1), ('b', 2), ('c', 3)]
 rdd1 = spark.sparkContext.parallelize(alphabet1)
+
+# สร้าง RDD ที่สอง
 alphabet2 = [('a', 1), ('b', 2), ('a', 1), ('b', 2)]
 rdd2 = spark.sparkContext.parallelize(alphabet2)
 
@@ -21,7 +25,6 @@ print(left)
 right = rdd1.rightOuterJoin(rdd2).collect()
 print("Right Outer Join:")
 print(right)
-
 
 """
 การใช้ `join`, `leftOuterJoin`, และ `rightOuterJoin` ใน PySpark จะช่วยในการรวมข้อมูลจากสอง RDD ตามคีย์ที่ตรงกัน โดยแต่ละฟังก์ชันมีพฤติกรรมที่แตกต่างกัน:
