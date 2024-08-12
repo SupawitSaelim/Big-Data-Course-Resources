@@ -2,21 +2,14 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import sum, sumDistinct
 from pyspark.sql.types import IntegerType
 
-# สร้าง Spark Session
 spark = SparkSession.builder.appName("SumExample").getOrCreate()
-
-# อ่านข้อมูลจากไฟล์ CSV หลายไฟล์
 read_file = spark.read.format("csv")\
     .option("header", "true")\
     .load("data/*.csv")
 
-# สร้าง Temporary View
 read_file.createOrReplaceTempView("tempTable")
-
-# ใช้ SQL Query เพื่อเลือกข้อมูลจาก Temporary View
 sqlDF = spark.sql("SELECT * FROM tempTable")
 
-# แปลงคอลัมน์เป็นประเภท Integer และเพิ่มเป็นคอลัมน์ใหม่
 sqlDF = sqlDF.withColumn('new_num_likes', 
                          sqlDF['num_likes'].cast(IntegerType()))
 
@@ -26,7 +19,6 @@ total_sum_df = sqlDF.select(sum('num_likes').alias('total_sum'))
 # คำนวณผลรวมของค่าที่ไม่ซ้ำกันในคอลัมน์ใหม่
 distinct_sum_df = sqlDF.select(sumDistinct('new_num_likes').alias('distinct_sum'))
 
-# แสดงผลลัพธ์
 total_sum_df.show()
 distinct_sum_df.show()
 

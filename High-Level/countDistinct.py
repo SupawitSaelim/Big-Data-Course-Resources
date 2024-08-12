@@ -1,18 +1,12 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import countDistinct
 
-# สร้าง Spark Session
 spark = SparkSession.builder.appName("DistinctCountExample").getOrCreate()
-
-# อ่านข้อมูลจากไฟล์ CSV หลายไฟล์
 read_file = spark.read.format("csv")\
     .option("header", "true")\
     .load("data/*.csv")
 
-# สร้าง Temporary View
 read_file.createOrReplaceTempView("tempTable")
-
-# ใช้ SQL Query เพื่อเลือกข้อมูลจาก Temporary View
 sqlDF = spark.sql("SELECT * FROM tempTable")
 
 # นับจำนวนค่าที่ไม่ซ้ำกันในคอลัมน์ที่ระบุ
@@ -21,35 +15,10 @@ distinct_count_df = sqlDF.select(countDistinct("num_reactions").alias("distinct_
 # แสดงผลลัพธ์
 distinct_count_df.show()
 
+
 '''
 ใน PySpark, การใช้ฟังก์ชัน `countDistinct` ช่วยในการนับจำนวนค่าที่ไม่ซ้ำกันในคอลัมน์หนึ่งคอลัมน์ ตัวอย่างโค้ดที่คุณให้มานั้นมีการใช้ฟังก์ชัน `countDistinct` แต่มีข้อผิดพลาดในการใช้เครื่องหมายคำพูดและยังไม่ได้ระบุชื่อคอลัมน์จริง ๆ ให้ลองใช้โค้ดที่แก้ไขแล้วด้านล่างนี้:
 
-### **ตัวอย่างโค้ดที่แก้ไขแล้ว:**
-
-```python
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import countDistinct
-
-# สร้าง Spark Session
-spark = SparkSession.builder.appName("DistinctCountExample").getOrCreate()
-
-# อ่านข้อมูลจากไฟล์ CSV หลายไฟล์
-read_file = spark.read.format("csv")\
-    .option("header", "true")\
-    .load("data/*.csv")
-
-# สร้าง Temporary View
-read_file.createOrReplaceTempView("tempTable")
-
-# ใช้ SQL Query เพื่อเลือกข้อมูลจาก Temporary View
-sqlDF = spark.sql("SELECT * FROM tempTable")
-
-# นับจำนวนค่าที่ไม่ซ้ำกันในคอลัมน์ที่ระบุ
-distinct_count_df = sqlDF.select(countDistinct("column_name").alias("distinct_count"))
-
-# แสดงผลลัพธ์
-distinct_count_df.show()
-```
 
 ### **คำอธิบายโค้ด:**
 

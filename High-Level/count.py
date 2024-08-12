@@ -1,17 +1,12 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import count
 
-# สร้าง Spark Session
 spark = SparkSession.builder.appName("AggregationExample").getOrCreate()
-
-# อ่านข้อมูลจากไฟล์ CSV หลายไฟล์
 read_file = spark.read.format("csv")\
     .option("header", "true")\
     .load("data/*.csv")
 
-# สร้าง Temporary View
 read_file.createOrReplaceTempView("tempTable")
-
 # นับจำนวนค่าที่ไม่เป็นค่าว่างในคอลัมน์ที่ระบุ
 count_df = spark.sql("SELECT COUNT(status_published) AS count_status_published FROM tempTable")
 

@@ -1,28 +1,26 @@
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import col
 
-# สร้าง Spark Session
 spark = SparkSession.builder.appName("JoinExample").getOrCreate()
 
-# อ่านข้อมูลจากไฟล์ CSV
-df1 = spark.read.format("csv").option("header", "true").load("data/fb_live_thailand.csv")
-df2 = spark.read.format("csv").option("header", "true").load("data/fb_live_thailand2.csv")
+df1 = spark.read.format("csv").option("header", "true").load("data/fb_live_thailand2.csv")
+df2 = spark.read.format("csv").option("header", "true").load("data/fb_live_thailand3.csv")
 
-# สร้าง Temporary View
+# แปลงประเภทข้อมูลให้ตรงกัน
+df1 = df1.withColumn("num_reactions", col("num_reactions").cast("integer"))
+df2 = df2.withColumn("status_published", col("status_published").cast("integer"))
+
 df1.createOrReplaceTempView("table1")
 df2.createOrReplaceTempView("table2")
 
-# ใช้ SQL Query เพื่อเลือกข้อมูลจาก Temporary View
-sqlDF1 = spark.sql("SELECT * FROM table1")
-sqlDF2 = spark.sql("SELECT * FROM table2")
-
-# กำหนดคอลัมน์ที่ใช้ในการจับคู่ระหว่างสอง DataFrames
-join_column = sqlDF1["num_reactions"] == sqlDF2["status_published"]
-
-# ทำการ Join ข้อมูลระหว่างสอง DataFrames โดยใช้คอลัมน์ที่จับคู่
-joined_df = sqlDF1.join(sqlDF2, join_column, "inner")  # ใช้ "inner" join เป็นตัวอย่าง มี outer, left, right อีกและ left_outer, right_outer, full, full_outer
+# ทำการ Join ข้อมูล
+join_column = df1["num_reactions"] == df2["status_published"]
+joined_df = df1.join(df2, join_column, "outer")
 
 # แสดงผลลัพธ์
 joined_df.show()
+
+
 
 
 '''

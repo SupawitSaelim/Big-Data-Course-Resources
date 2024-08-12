@@ -2,21 +2,13 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import avg
 from pyspark.sql.types import IntegerType
 
-# สร้าง Spark Session
 spark = SparkSession.builder.appName("AverageExample").getOrCreate()
-
-# อ่านข้อมูลจากไฟล์ CSV หลายไฟล์
 read_file = spark.read.format("csv")\
     .option("header", "true")\
     .load("data/*.csv")
 
-# สร้าง Temporary View
 read_file.createOrReplaceTempView("tempTable")
-
-# ใช้ SQL Query เพื่อเลือกข้อมูลจาก Temporary View
 sqlDF = spark.sql("SELECT * FROM tempTable")
-
-# แปลงคอลัมน์เป็นประเภท Integer และเพิ่มเป็นคอลัมน์ใหม่
 sqlDF = sqlDF.withColumn('new_num_likes', 
                          sqlDF['num_likes'].cast(IntegerType()))
 
@@ -25,6 +17,10 @@ average_df = sqlDF.select(avg('new_num_likes').alias('average_value'))
 
 # แสดงผลลัพธ์
 average_df.show()
+
+
+
+
 
 '''
 ในการคำนวณค่าเฉลี่ย (average) ของคอลัมน์ใน PySpark DataFrame คุณสามารถใช้ฟังก์ชัน `avg` จาก `pyspark.sql.functions` ได้ นี่คือวิธีการที่ถูกต้องในการคำนวณค่าเฉลี่ยและการแปลงคอลัมน์เป็น Integer ก่อนการคำนวณ:

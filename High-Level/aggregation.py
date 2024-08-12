@@ -1,14 +1,11 @@
 from pyspark.sql import SparkSession
 
-# สร้าง Spark Session
 spark = SparkSession.builder.appName("AggregationExample").getOrCreate()
 
-# อ่านข้อมูลจากไฟล์ CSV หลายไฟล์
 read_file = spark.read.format("csv")\
     .option("header", "true")\
     .load("data/*.csv")
 
-# สร้าง Temporary View
 read_file.createOrReplaceTempView("temp_view")
 
 # คิวรีข้อมูลเพื่อทำ Aggregation

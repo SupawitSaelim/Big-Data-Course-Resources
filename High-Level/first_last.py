@@ -1,18 +1,11 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import first, last
 
-# สร้าง Spark Session
 spark = SparkSession.builder.appName("FirstLastExample").getOrCreate()
-
-# อ่านข้อมูลจากไฟล์ CSV หลายไฟล์
 read_file = spark.read.format("csv")\
     .option("header", "true")\
     .load("data/*.csv")
-
-# สร้าง Temporary View
 read_file.createOrReplaceTempView("tempTable")
-
-# ใช้ SQL Query เพื่อเลือกข้อมูลจาก Temporary View
 sqlDF = spark.sql("SELECT * FROM tempTable")
 
 # เลือกค่าแรกและค่าหลังสุดจากคอลัมน์ที่ระบุ
@@ -27,35 +20,6 @@ result_df.show()
 '''
 ในการใช้ PySpark สำหรับการคำนวณค่าแรกและค่าสุดท้ายในคอลัมน์ที่ระบุของ DataFrame คุณสามารถใช้ฟังก์ชัน `first` และ `last` จาก `pyspark.sql.functions` ได้ โค้ดที่คุณให้มามีการใช้งานฟังก์ชัน `first` และ `last` แต่มีข้อผิดพลาดในการใช้เครื่องหมายคำพูดและการจัดระเบียบโค้ด
 
-### **ตัวอย่างโค้ดที่แก้ไขแล้ว:**
-
-```python
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import first, last
-
-# สร้าง Spark Session
-spark = SparkSession.builder.appName("FirstLastExample").getOrCreate()
-
-# อ่านข้อมูลจากไฟล์ CSV หลายไฟล์
-read_file = spark.read.format("csv")\
-    .option("header", "true")\
-    .load("data/*.csv")
-
-# สร้าง Temporary View
-read_file.createOrReplaceTempView("tempTable")
-
-# ใช้ SQL Query เพื่อเลือกข้อมูลจาก Temporary View
-sqlDF = spark.sql("SELECT * FROM tempTable")
-
-# เลือกค่าแรกและค่าหลังสุดจากคอลัมน์ที่ระบุ
-result_df = sqlDF.select(
-    first("column_name").alias("first_value"),
-    last("column_name").alias("last_value")
-)
-
-# แสดงผลลัพธ์
-result_df.show()
-```
 
 ### **คำอธิบายโค้ด:**
 

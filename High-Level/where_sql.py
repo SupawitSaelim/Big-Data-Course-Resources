@@ -1,22 +1,20 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.types import IntegerType
 
-# Create Spark Session
 spark = SparkSession.builder.appName("ExampleApp").getOrCreate()
 
-# Read CSV file
 read_file = spark.read.format("csv")\
     .option("header", "true")\
     .load("fb_live_thailand.csv")
 
-# SQL query
+
 sqlDF = read_file.select("num_reactions", "num_comments", "num_loves")\
     .where(read_file["num_reactions"].cast(IntegerType()) > 100)\
     .withColumnRenamed("num_loves", "new_num_loves")\
     .orderBy("num_reactions")  # Order by num_reactions
 
-# Show result
-sqlDF.show(10)  # Display the first 10 rows
+
+sqlDF.show(10) 
 
 '''
 โค้ดที่ให้มานั้นเป็นการใช้ PySpark เพื่อทำงานกับข้อมูลในไฟล์ CSV โดยขั้นตอนหลักๆ ของโค้ดจะมีดังนี้:

@@ -1,15 +1,11 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.types import IntegerType
 
-# สร้าง Spark Session
 spark = SparkSession.builder.appName("ExampleApp").getOrCreate()
-
-# อ่านไฟล์ CSV
 read_file = spark.read.format("csv")\
     .option("header", "true")\
     .load("fb_live_thailand.csv")
 
-# สร้าง Temporary View
 read_file.createOrReplaceTempView("temp_view_name")
 
 # ใช้ SQL Query เพื่อคิวรีข้อมูล
@@ -17,6 +13,8 @@ sqlDF = spark.sql("SELECT * FROM temp_view_name")
 
 # แสดงผลลัพธ์
 sqlDF.show(10)  # แสดง 10 แถวแรก
+
+
 
 '''
 อธิบายโค้ด:

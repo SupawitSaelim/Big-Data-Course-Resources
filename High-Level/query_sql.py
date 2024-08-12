@@ -1,15 +1,12 @@
 from pyspark.sql import SparkSession
 
-# Create Spark Session
-spark = SparkSession.builder.appName("ExampleApp").getOrCreate()
+spark = SparkSession.builder \
+    .appName("CSV to DataFrame") \
+    .getOrCreate()
 
-# Read CSV file
-read_file = spark.read.format("csv")\
-    .option("header", "true")\
-    .load("fb_live_thailand.csv")
+file_path = "./fb_live_thailand.csv"  
+read_file = spark.read.csv(file_path, header=True, inferSchema=True)
 
-# Select specific columns
-sqlDF = read_file.select("status_published", "num_reactions")
-
-# Show result
-sqlDF.show(10)  # Replace 10 with the number of rows you want to display
+sqlDF = read_file.select("status_id", "status_type")
+sqlDF.show(10)
+spark.stop()
