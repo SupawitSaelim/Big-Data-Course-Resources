@@ -1,0 +1,4 @@
+
+intro -> Hadoop(1) -> Hadoop(2) -> ApacheSpark -> NoSQL
+-> Software Preparation -> Low-Level Spark -> High-Level Spark
+Structured Streaming -> Source and Sink -> Event-Time
