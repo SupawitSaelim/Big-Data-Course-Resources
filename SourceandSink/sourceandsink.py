@@ -30,7 +30,7 @@ lines = spark \
     .option("maxFilesPerTrigger", 1) \
     .option("header", True) \
     .schema(file_schema) \
-    .load("C:/Users/Supawit/Desktop/Big_Data_Lecture/SourceandSink/data/stream")
+    .load("C:/Users/oatsu/Documents/Big-Data-Course-Resources/SourceandSink/data/stream")
 
 # Add additional columns and transformations
 words = lines \
@@ -47,9 +47,9 @@ wordCounts = words \
 query = wordCounts \
     .writeStream \
     .format("csv") \
-    .option("path", "C:/Users/Supawit/Desktop/Big_Data_Lecture/SourceandSink/data/savetofile") \
+    .option("path", "C:/Users/oatsu/Documents/Big-Data-Course-Resources/SourceandSink/data/savetofile") \
     .trigger(processingTime='5 seconds') \
-    .option("checkpointLocation", "C:/Users/Supawit/Desktop/Big_Data_Lecture/SourceandSink/data/savetofile/checkpoint") \
+    .option("checkpointLocation", "C:/Users/oatsu/Documents/Big-Data-Course-Resources/SourceandSink/data/savetofile/checkpoint") \
     .outputMode("append") \
     .option("truncate", False) \
     .start()
