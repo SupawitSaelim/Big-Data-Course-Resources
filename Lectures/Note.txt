@@ -1,0 +1,176 @@
+1. Examples for Different Types of Problems
+
+Regression (0.5 points):
+Problem: Predicting the price of a house based on features like size, number of bedrooms, location, etc.
+Explanation: Regression is used to predict a continuous outcome (house price) based 
+on various input features.
+
+Classification (0.5 points):
+Problem: Determining whether an email is spam or not spam based on its content and metadata.
+Explanation: Classification is used to categorize data into discrete classes (spam or not spam).
+
+Clustering (0.5 points):
+Problem: Grouping customers into segments based on purchasing behavior to tailor marketing strategies.
+Explanation: Clustering is used to find natural groupings in data where the number of
+groups (clusters) is not known beforehand.
+
+2.Recommendation System Example (0.5 points)
+
+Example: Netflix recommendation system.
+Explanation: Netflix uses a recommendation system to 
+suggest movies and TV shows to users based on their viewing history, ratings, and preferences.
+
+3.Graph Example (0.5 points)
+
+Example: Social network analysis showing connections between users.
+Explanation: A graph can represent users as nodes and their connections (friendships, followers)
+as edges, illustrating the relationships and interactions within a social network.
+
+Spark Structured Streaming Code (2.5 points)
+
+To count the occurrences of different "status_type" values grouped by time from the CSV files fb_part1.csv 
+and fb_part2.csv, and then write the results to the console, you would use Spark Structured Streaming. 
+Below is an example of how to do this in Python with PySpark:
+
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import window, count, to_timestamp, col
+
+# Initialize Spark session
+spark = SparkSession.builder \
+    .appName("StructuredStreamingExample") \
+    .getOrCreate()
+
+# Define the schema for the CSV files
+schema = "Table STRING,status_id STRING, status_type STRING, status_published STRING, num_reactions INT, num_comments INT"
+
+# Read streaming data from CSV files
+df = spark.readStream \
+    .format("csv") \
+    .option("header", "true") \
+    .schema(schema) \
+    .load("C:/Users/oatsu/Documents/Big-Data-Course-Resources/data")
+
+# Convert status_published to TIMESTAMP with correct format
+df = df.withColumn("status_published", to_timestamp(col("status_published"), "M/d/yyyy H:mm"))
+
+# Define the processing logic
+processed_df = df.groupBy(
+    window("status_published", "1 hour"),  # Group by 1-hour windows
+    "status_type"
+).agg(count("*").alias("count"))
+
+# Write the output to the console
+query = processed_df.writeStream \
+    .outputMode("update") \
+    .format("console") \
+    .start()
+
+# Await termination of the streaming query
+query.awaitTermination()
+
+
+Sure! Let’s break down the PySpark code step by step:
+
+### 1. **Initialize Spark Session**
+
+```python
+from pyspark.sql import SparkSession
+
+# Initialize Spark session
+spark = SparkSession.builder \
+    .appName("StructuredStreamingExample") \
+    .getOrCreate()
+```
+
+- **Purpose**: This creates a `SparkSession`, which is the entry point for working with Spark in PySpark. It sets up the necessary configuration for Spark and allows you to use DataFrame and SQL APIs.
+
+### 2. **Define Schema for CSV Files**
+
+```python
+schema = "Table STRING, status_id STRING, status_type STRING, status_published STRING, num_reactions INT, num_comments INT"
+```
+
+- **Purpose**: Defines the schema for the CSV files. Here, `status_published` is defined as `STRING` initially because we’ll convert it to `TIMESTAMP` later.
+
+### 3. **Read Streaming Data from CSV Files**
+
+```python
+df = spark.readStream \
+    .format("csv") \
+    .option("header", "true") \
+    .schema(schema) \
+    .load("C:/Users/oatsu/Documents/Big-Data-Course-Resources/data")
+```
+
+- **Purpose**: Reads data from CSV files in the specified directory as a streaming DataFrame. 
+
+- **Parameters**:
+  - `format("csv")`: Specifies that the data source format is CSV.
+  - `option("header", "true")`: Indicates that the first row of the CSV files contains headers.
+  - `schema(schema)`: Applies the predefined schema to the data.
+  - `load("C:/Users/oatsu/Documents/Big-Data-Course-Resources/data")`: Specifies the directory where the CSV files are located.
+
+### 4. **Convert `status_published` to TIMESTAMP**
+
+```python
+from pyspark.sql.functions import to_timestamp, col
+
+df = df.withColumn("status_published", to_timestamp(col("status_published"), "M/d/yyyy h:mm"))
+```
+
+- **Purpose**: Converts the `status_published` column from a string to a timestamp type. This allows for time-based operations and windowing.
+
+- **`to_timestamp()`**: A function that converts a string to a `TIMESTAMP` type based on the provided format.
+
+### 5. **Define Processing Logic**
+
+```python
+from pyspark.sql.functions import window, count
+
+processed_df = df.groupBy(
+    window("status_published", "1 hour"),  # Group by 1-hour windows
+    "status_type"
+).agg(count("*").alias("count"))
+```
+
+- **Purpose**: Performs transformations and aggregations on the streaming data.
+
+- **`groupBy(window("status_published", "1 hour"), "status_type")`**: Groups the data into 1-hour time windows based on the `status_published` timestamp and also groups by `status_type`.
+
+- **`agg(count("*").alias("count"))`**: Aggregates the data by counting the number of rows in each group, renaming the count column to `"count"`.
+
+### 6. **Write Output to Console**
+
+```python
+query = processed_df.writeStream \
+    .outputMode("update") \
+    .format("console") \
+    .start()
+```
+
+- **Purpose**: Defines how the processed data should be written out.
+
+- **`outputMode("update")`**: Specifies the output mode. `"update"` means only updated rows will be output (useful for aggregations).
+
+- **`format("console")`**: Outputs the results to the console (standard output).
+
+- **`start()`**: Starts the streaming query.
+
+### 7. **Await Termination**
+
+```python
+query.awaitTermination()
+```
+
+- **Purpose**: Keeps the streaming query running, waiting for it to terminate. This will keep the application running and continuously processing incoming data until it is stopped manually or an error occurs.
+
+### Summary
+
+This PySpark script sets up a structured streaming job that:
+1. Reads data from a directory of CSV files.
+2. Converts a timestamp string to a `TIMESTAMP` type.
+3. Groups the data into 1-hour windows and by `status_type`.
+4. Counts the occurrences in each group.
+5. Outputs the results to the console.
+
+This setup is commonly used for real-time data processing and analytics, where data is continuously ingested and processed.
