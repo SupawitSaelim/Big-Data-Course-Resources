@@ -1,115 +1,109 @@
+# Big Data Analytics - Course Overview and Resources
 
-# Big Data Course Study
+Welcome to the GitHub repository for the Big Data Analytics course at King Mongkut's University of Technology North Bangkok (KMUTNB). This repository contains materials, code samples, and resources associated with the course, providing a comprehensive overview of Big Data concepts and tools.
 
-Welcome to the repository for the Big Data course study project. This repository showcases various implementations and exercises related to big data processing and analytics, focusing on practical applications of key techniques.
+## Course Structure
 
-## Project Overview
+### Week 1: Introduction to Big Data
+- **Introduction to Big Data**: Understand the key concepts and significance of Big Data in today's technology landscape.
+- **Big Data Analytics Life Cycle**: Learn about the phases of the Big Data analytics process, from data collection to actionable insights.
+- **Problems Discovery**: Identify common challenges and issues faced in Big Data analytics.
+- **Apache Hadoop**: Introduction to Hadoop, its architecture, and its role in Big Data processing.
+- **MapReduce Implementation (Part 1)**: Begin learning about the MapReduce programming model and its implementation basics.
 
-This repository contains scripts and examples demonstrating fundamental concepts in big data analytics. The provided examples cover a range of techniques from basic data manipulation to advanced analytics, including visualization and machine learning.
+### Week 2: Advanced MapReduce and Apache Spark
+- **MapReduce Implementation (Part 2)**: Continue with advanced topics in MapReduce, focusing on optimization and real-world use cases.
+- **Apache Spark**: Introduction to Apache Spark, including its architecture and advantages over Hadoop MapReduce.
+- **Apache Spark Implementation**: Hands-on implementation of Spark, covering its core components and use cases.
 
-## Table of Contents
+### Week 3: NoSQL Databases
+- **NoSQL Big Data Storage**: Learn about different types of NoSQL databases and their suitability for various Big Data storage needs.
+- **NoSQL for Big Data Processing**: Explore how NoSQL databases are used for processing large-scale data efficiently.
 
-- [Introduction](#introduction)
-- [Overview of Big Data Analytics](#overview-of-big-data-analytics)
-- [Project Structure](#project-structure)
-- [Scripts](#scripts)
-- [How to Run](#how-to-run)
-- [Examples](#examples)
-- [Contributing](#contributing)
-- [License](#license)
+### Week 4: Apache Spark Data Processing
+- **Batch Processing**: Study the concepts and techniques for processing large datasets in batch mode using Apache Spark.
+- **Low-Level Apache Spark Data Processing**: Dive into low-level operations and transformations in Spark, including RDDs and basic transformations.
+- **High-Level Apache Spark Data Processing**: Explore high-level APIs like DataFrames and Datasets for more abstract and efficient data processing.
+- **High-Level Apache Spark Implementation**: Practical implementation of high-level Spark features for complex data processing tasks.
 
-## Introduction
+### Week 5: Data Aggregations and Joins
+- **Data Aggregations and Joins for High-Level Apache Spark**: Learn techniques for data aggregation and performing joins in Spark using high-level APIs.
+- **Data Aggregations and Joins for High-Level Apache Spark Implementation**: Implement aggregation and join operations with practical examples in Spark.
 
-This project is part of a course study on Big Data. It focuses on practical exercises using MapReduce and other data processing techniques to handle and analyze large datasets.
+### Week 6: Introduction to Streaming
+- **Introduction to Apache Spark Streaming**: Understand the fundamentals of Spark Streaming and its role in real-time data processing.
+- **Apache Spark Structured Streaming**: Explore Structured Streaming for managing streaming data in a more structured manner.
+- **Apache Spark Structured Streaming Implementation**: Implement Structured Streaming solutions for real-time data processing tasks.
 
-## Overview of Big Data Analytics
+### Week 7: Streaming Sources and Sinks
+- **Streaming Source and Sink**: Study various sources and sinks used in streaming data pipelines, such as Kafka and file systems.
+- **Streaming Source and Sink Implementation**: Practical implementation of data sources and sinks in Spark Streaming applications.
 
-### Big Data Analytics Visualization
+### Week 8: Advanced Streaming Operations
+- **Streaming Event-Time Window Operation and Watermarking**: Learn about event-time window operations and watermarking techniques for managing out-of-order data.
+- **Streaming Event-Time Window Operation and Watermarking Implementation**: Implement event-time windows and watermarking in a streaming context.
 
-- **Big Data Analytics Visualization Design**: Techniques and tools for designing effective visualizations for large datasets.
+### Week 9: Midterm Examination
+- **Review and Consolidation**: Focus on reviewing and consolidating knowledge from the first half of the course. Prepare for the midterm examination to assess understanding and progress.
 
-### Big Data Analytics: Clustering
+### Week 10: Visualization and Clustering
+- **Overview of Big Data Analytics Visualization**: Learn about visualization techniques and tools for presenting Big Data insights.
+- **Big Data Analytics Visualization Design**: Explore design principles and best practices for effective data visualization.
+- **Big Data Clustering**: Understand clustering algorithms and techniques used in Big Data to group similar data points.
+- **Big Data Clustering Implementation and Visualization**: Implement clustering algorithms and visualize the results to gain insights from the clustered data.
 
-- **Big Data Clustering Implementation and Visualization**: Methods for clustering large datasets and visualizing the results to find patterns and groupings.
+### Week 11: Classification and Regression
+- **Big Data Classification**: Study classification algorithms and their applications in Big Data scenarios.
+- **Big Data Classification Implementation and Visualization**: Implement classification algorithms and visualize the outcomes.
+- **Big Data Regression**: Learn about regression techniques and their use in predicting continuous outcomes from Big Data.
+- **Big Data Regression Implementation and Visualization**: Implement regression models and visualize predictions to analyze their performance.
 
-### Big Data Analytics: Classification
+### Week 12: Time Series and Recommendation Systems
+- **Big Data Time Series**: Explore time series analysis techniques for handling and analyzing temporal data in Big Data.
+- **Big Data Time Series Implementation and Visualization**: Implement time series models and visualize trends and patterns over time.
+- **Big Data Recommendation System**: Learn about recommendation systems and their application in providing personalized suggestions based on Big Data.
+- **Big Data Recommendation System Implementation and Visualization**: Build and visualize a recommendation system to understand user preferences and behaviors.
 
-- **Big Data Classification Implementation and Visualization**: Approaches for classifying data into categories and visualizing classification results.
+### Week 13: Association Rules
+- **Big Data Association Rules**: Study association rule mining techniques to discover relationships and patterns within large datasets.
+- **Big Data Association Rules Implementation and Visualization**: Implement association rule mining algorithms and visualize the discovered rules to interpret their significance.
 
-### Big Data Analytics: Regression
+### Week 14: Text Analysis
+- **Big Data Text Analysis**: Learn techniques for analyzing and processing large volumes of text data to extract meaningful information.
+- **Big Data Text Analysis Implementation and Visualization**: Implement text analysis methods and visualize results to gain insights from textual data.
 
-- **Big Data Regression Implementation and Visualization**: Techniques for performing regression analysis on large datasets to predict continuous outcomes.
+### Week 15: Graph Analysis and Deep Learning
+- **Big Data Graph Analysis**: Explore graph analysis techniques for understanding relationships and connections within large datasets.
+- **Big Data Graph Analysis Implementation and Visualization**: Implement graph algorithms and visualize graph data to analyze network structures.
+- **Big Data Deep Learning**: Study deep learning techniques and their application in analyzing complex Big Data.
+- **Big Data Deep Learning Implementation and Visualization**: Build and visualize deep learning models to solve advanced Big Data problems.
 
-### Big Data Analytics: Time Series
+### Week 16: Key Concepts Review
+- **Analyze and Summarize Key Concepts of Big Data Analytics**: Review and consolidate key concepts and techniques covered throughout the course to prepare for the final examination.
 
-- **Big Data Time Series Implementation and Visualization**: Methods for analyzing time series data and visualizing trends and patterns over time.
+### Week 17: Final Examination
+- **Preparation and Assessment**: Prepare for the final examination by revisiting all major topics and reviewing key concepts to demonstrate your understanding and skills.
 
-### Big Data Analytics: Recommendation System
+## Libraries and Tools
 
-- **Big Data Recommendation System Implementation and Visualization**: Building and visualizing recommendation systems to suggest items based on user behavior.
+The course will utilize the following libraries and tools:
+- Apache Hadoop
+- Apache Spark (including Spark Streaming and Structured Streaming)
+- NoSQL databases (MongoDB, Cassandra, HBase)
+- Matplotlib, Seaborn (for visualization)
+- Scikit-learn, Statsmodels (for machine learning and statistical analysis)
+- TensorFlow, PyTorch (for deep learning)
+- NLTK, SpaCy (for text analysis)
+- Apache Spark GraphX (for graph analysis)
+- Apache Kafka (for streaming data)
 
-### Big Data Analytics: Association Rules
+## Resources
+- **Lecture Slides**: Provided in individual lecture folders.
+- **Code Samples**: Available in the `code` directory.
+- **Additional Reading**: Refer to the `docs` directory for supplementary materials.
 
-- **Big Data Association Rules Implementation and Visualization**: Techniques for discovering association rules in datasets and visualizing these relationships.
-
-### Big Data Analytics: Text Analysis
-
-- **Big Data Text Analysis Implementation and Visualization**: Analyzing and visualizing textual data to extract insights and trends.
-
-### Big Data Analytics: Graph Analysis
-
-- **Big Data Graph Analysis Implementation and Visualization**: Techniques for analyzing and visualizing relationships and networks within large datasets.
-
-### Big Data Analytics: Deep Learning
-
-- **Big Data Deep Learning Implementation and Visualization**: Implementing deep learning models and visualizing their results for complex pattern recognition.
-
-### Analyze and Summarize Key Concepts of Big Data Analytics
-
-- **Summary**: Analyzing and summarizing the key concepts and techniques used in big data analytics.
-
-## Project Structure
-
-- `MapReduceJoin.py`: Performs a join operation between two types of data based on a common key.
-- `MapReduceInvertedIndex.py`: Creates an inverted index from the input data.
-- `MapReduceBinning.py`: Bins data into categories based on specific criteria.
-- `MapReduceDistinct.py`: Extracts distinct dates from the dataset for a specific year.
-- `MapReduceAverage.py`: Calculates the average number of reactions for each status type.
-
-## How to Run
-
-To run any of the scripts, ensure you have `mrjob` installed. You can install it using pip:
-
-```sh
-pip install mrjob
-```
-
-Run the script using the following command:
-
-```sh
-python <script_name>.py <input_file>
-```
-
-Replace `<script_name>` with the name of the script you wish to execute and `<input_file>` with the path to your data file.
-
-## Examples
-
-Here are a few example commands to run the provided scripts:
-
-```sh
-python MapReduceJoin.py input.csv
-python MapReduceInvertedIndex.py input.csv
-python MapReduceBinning.py input.csv
-```
-
-## Contributing
-
-If you would like to contribute to this project, please fork the repository and submit a pull request. For major changes or enhancements, please open an issue to discuss your proposed changes before submitting a pull request.
+Feel free to explore the repository and utilize the provided materials to enhance your understanding of Big Data Analytics. If you have any questions or issues, please open an issue in this repository or contact the course administrator.
 
 ## License
 
 This project is licensed under the MIT License. All rights to the project are reserved for Dr. Sirintra Vaiwsri at King Mongkut's University of Technology North Bangkok (KMUTNB). See the [LICENSE](LICENSE) file for details.
-
----
-
-Feel free to make any additional adjustments or add more details as needed!
