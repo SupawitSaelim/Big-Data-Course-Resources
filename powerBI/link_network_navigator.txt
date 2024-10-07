@@ -1,0 +1,1 @@
+https://github.com/microsoft/PowerBI-visuals-NetworkNavigator/releases
