@@ -14,7 +14,7 @@ df = spark.readStream \
     .format("csv") \
     .option("header", "true") \
     .schema(schema) \
-    .load("C:/Users/oatsu/Documents/Big-Data-Course-Resources/data")
+    .load("./test")
 
 # Convert status_published to TIMESTAMP with correct format
 df = df.withColumn("status_published", to_timestamp(col("status_published"), "M/d/yyyy H:mm"))
