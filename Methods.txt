@@ -1,0 +1,66 @@
+---------------------------------------------------------------------------------------------
+Clustering
+การจัดการ DataFrame
+    df.printSchema(): แสดงโครงสร้างของ DataFrame
+    df.describe().show(): สรุปข้อมูลทางสถิติของ DataFrame
+การจัดการคอลัมน์ (Column Manipulation)
+    df.select("column1", "column2").show(): เลือกคอลัมน์ที่ต้องการ
+    df = df.withColumn("new_column", col("existing_column") * 2)
+    df = df.drop("column_name")
+การกรองข้อมูล (Data Filtering)
+    df_filtered = df.filter(df.column_name > 10)
+การจัดกลุ่มข้อมูล (Data Aggregation)
+    df.groupBy("column_name").count().show(): การจัดกลุ่มข้อมูลและการใช้ฟังก์ชันรวม
+    from pyspark.sql import functions as F: ใช้ฟังก์ชันการรวมที่ซับซ้อนขึ้น
+    df.groupBy("column_name").agg(F.avg("value_column")).show()
+การเขียนข้อมูล (Data Writing)
+    df.write.csv("./output.csv", header=True)
+การรวม DataFrame (Data Joining)
+    df1.join(df2, on="key_column", how="inner").show()
+การเปลี่ยนรูป DataFrame (Data Transformation)
+    df_combined = df1.union(df2)
+    df_unique = df.distinct(): ลบแถวที่ซ้ำ
+
+ค่าตั้งค่าใน spark.read.csv()
+    header=True: ถ้าตั้งค่าเป็น True จะบอกให้ PySpark ว่าแถวแรกของไฟล์ CSV เป็นชื่อคอลัมน์ (header)
+    inferSchema=True: ถ้าตั้งค่าเป็น True PySpark จะพยายามเดาประเภทข้อมูลของแต่ละคอลัมน์จากข้อมูลในไฟล์ CSV
+                    : ถ้าตั้งค่าเป็น False จะถือว่าทุกคอลัมน์เป็น StringType โดยอัตโนมัติ
+    sep: ใช้เพื่อกำหนดตัวแบ่ง (delimiter) สำหรับข้อมูลในไฟล์ เช่น ถ้าใช้ sep=";" สำหรับไฟล์ที่ใช้เครื่องหมาย ; เป็นตัวแบ่ง
+    quote: ใช้กำหนดตัวอักษรที่ใช้ในการอ้างอิงค่าข้อมูล เช่น ถ้าใช้เครื่องหมาย quote='"' เป็นตัวอักษรอ้างอิง
+            ช่วยให้ PySpark เข้าใจว่าข้อมูลที่อยู่ในเครื่องหมายคำพูดเป็นค่าทั้งหมดแม้ว่าจะมีการใช้ตัวแบ่งภายใน
+    escape: ใช้เพื่อกำหนดตัวอักษรที่ใช้สำหรับการหลีกเลี่ยง เช่น escape="\\" เพื่อจัดการกับค่าในไฟล์ที่มีตัวอักษร quote
+    nullValue: เช่น  nullValue="NA" คือค่าที่อ่านในไฟล์เป็น NA จะเเปลงเป็นค่า null
+    mode: ใช้กำหนดโหมดการอ่านข้อมูล เช่น DROPMALFORMED (ลบแถวที่มีข้อมูลผิดรูปแบบ เช่น ค่าบางตัวหายไป) หรือ 
+          FAILFAST (หยุดการอ่านทันทีเมื่อเจอข้อมูลผิดรูปแบบ)
+    encoding: ใช้กำหนดการเข้ารหัสของไฟล์ เช่น UTF-8, ISO-8859-1 = encoding="UTF-8"
+
+ประเภทข้อมูลที่ใช้ใน .cast()
+    IntegerType(): เก็บค่าเลขจำนวนเต็ม เช่น 1, 2, -5
+    LongType(): เก็บค่าเลขจำนวนเต็มขนาดใหญ่
+    FloatType(): เก็บค่าจำนวนจริงที่มีทศนิยม เช่น 1.23
+    DoubleType(): เก็บค่าจำนวนจริงที่มีทศนิยมที่มีความแม่นยำสูงกว่าประเภท FloatType
+    StringType(): เก็บค่าข้อความ เช่น "hello world"
+    BinaryType(): เก็บข้อมูลแบบไบนารี (binary data) เช่น ไฟล์ภาพ เสียง
+    DateType(): เก็บวันที่ เช่น 2024-10-26
+    TimestampType(): เก็บวันที่และเวลาพร้อมเขตเวลา เช่น 2024-10-26 13:45:00
+    BooleanType(): เก็บข้อมูล Boolean (True/False) เช่น True, False
+    ArrayType(elementType): เก็บข้อมูลเป็น Array โดยกำหนดประเภทของข้อมูลได้ เช่น ArrayType(StringType())
+
+KMeans มีพารามิเตอร์หลักที่นิยมใช้ดังนี้:
+    kmeans = KMeans(featuresCol="scaledFeatures", predictionCol="prediction_col", k=i)
+    featuresCol: คอลัมน์ที่ใช้เป็นฟีเจอร์สำหรับการสร้างกลุ่มข้อมูล (ค่าเริ่มต้นคือ "features")
+    predictionCol: คอลัมน์ที่เก็บผลลัพธ์ของการจัดกลุ่ม
+    k: จำนวนกลุ่ม (clusters) ที่ต้องการแบ่ง (จำเป็นต้องกำหนด)
+    maxIter: จำนวนรอบสูงสุดในการทำงานของอัลกอริทึม (ค่าเริ่มต้นคือ 20)
+    tol: ค่าความคลาดเคลื่อนที่ยอมรับได้สำหรับการหยุดการทำงาน (ค่าเริ่มต้นคือ 1e-4)
+    initMode: วิธีการเริ่มต้นจุดศูนย์กลางกลุ่ม (k-means|| หรือ random)
+
+แปลง DataFrame ของ PySpark เป็น DataFrame ของ Pandas
+    clustered_data_pd = predictions.toPandas()
+    clustered_data_pd = predictions.select("column1", "column2").toPandas()
+    clustered_data_pd = predictions.limit(1000).toPandas()  # limit rows
+    clustered_data_pd = predictions.toPandas().dropna()
+
+------------------------------------------------------------------------------------------------------
+Regression
+1. Linear Regression
