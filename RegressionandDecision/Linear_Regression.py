@@ -3,7 +3,7 @@ from pyspark.ml.feature import StringIndexer, VectorAssembler
 from pyspark.ml.regression import LinearRegression
 from pyspark.ml import Pipeline
 from pyspark.ml.evaluation import RegressionEvaluator
-from pyspark.sql.functions import col
+from pyspark.sql.functions import col,format_number
 from pyspark.sql.types import IntegerType
 import pandas as pd
 import seaborn as sns
@@ -60,6 +60,11 @@ selected_data = predictions.select(
     col("num_loves_ind").cast(IntegerType()).alias("num_loves"),
     col("prediction").cast(IntegerType()).alias("prediction")
 ).orderBy(col("prediction").desc())
+
+predictions.select("num_loves_ind", "prediction").show(5)
+# ตัวอย่างปัดเศษทศนิยม
+# predictions.select("num_loves_ind",format_number(col("prediction"), 2)\
+#                    .alias("prediction_rounded")).show(5)
 
 selected_data_pd = selected_data.toPandas()
 

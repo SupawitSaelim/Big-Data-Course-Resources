@@ -35,16 +35,18 @@ Clustering
     encoding: ใช้กำหนดการเข้ารหัสของไฟล์ เช่น UTF-8, ISO-8859-1 = encoding="UTF-8"
 
 ประเภทข้อมูลที่ใช้ใน .cast()
-    IntegerType(): เก็บค่าเลขจำนวนเต็ม เช่น 1, 2, -5
-    LongType(): เก็บค่าเลขจำนวนเต็มขนาดใหญ่
-    FloatType(): เก็บค่าจำนวนจริงที่มีทศนิยม เช่น 1.23
-    DoubleType(): เก็บค่าจำนวนจริงที่มีทศนิยมที่มีความแม่นยำสูงกว่าประเภท FloatType
-    StringType(): เก็บค่าข้อความ เช่น "hello world"
-    BinaryType(): เก็บข้อมูลแบบไบนารี (binary data) เช่น ไฟล์ภาพ เสียง
-    DateType(): เก็บวันที่ เช่น 2024-10-26
-    TimestampType(): เก็บวันที่และเวลาพร้อมเขตเวลา เช่น 2024-10-26 13:45:00
-    BooleanType(): เก็บข้อมูล Boolean (True/False) เช่น True, False
-    ArrayType(elementType): เก็บข้อมูลเป็น Array โดยกำหนดประเภทของข้อมูลได้ เช่น ArrayType(StringType())
+    **** ใช้ double (ในรูปแบบสตริง) เมื่อคุณกำลังทำงานกับการแปลงประเภทข้อมูลใน DataFrame ในขณะที่ใช้ 
+    DoubleType() จะใช้ในกรณีที่คุณกำลังตั้งค่าชนิดข้อมูลของคอลัมน์ใน schema ของ DataFrame *
+    IntegerType(): เก็บค่าเลขจำนวนเต็ม เช่น 1, 2, -5   integer
+    LongType(): เก็บค่าเลขจำนวนเต็มขนาดใหญ่           bigint
+    FloatType(): เก็บค่าจำนวนจริงที่มีทศนิยม เช่น 1.23    float
+    DoubleType(): เก็บค่าจำนวนจริงที่มีทศนิยมที่มีความแม่นยำสูงกว่าประเภท FloatType double
+    StringType(): เก็บค่าข้อความ เช่น "hello world" string
+    BinaryType(): เก็บข้อมูลแบบไบนารี (binary data) เช่น ไฟล์ภาพ เสียง binary
+    DateType(): เก็บวันที่ เช่น 2024-10-26 date
+    TimestampType(): เก็บวันที่และเวลาพร้อมเขตเวลา เช่น 2024-10-26 13:45:00 timestamp
+    BooleanType(): เก็บข้อมูล Boolean (True/False) เช่น True, False boolean
+    ArrayType(elementType): เก็บข้อมูลเป็น Array โดยกำหนดประเภทของข้อมูลได้ เช่น ArrayType(StringType()) array
 
 KMeans มีพารามิเตอร์หลักที่นิยมใช้ดังนี้:
     kmeans = KMeans(featuresCol="scaledFeatures", predictionCol="prediction_col", k=i)
@@ -64,3 +66,34 @@ KMeans มีพารามิเตอร์หลักที่นิยม�
 ------------------------------------------------------------------------------------------------------
 Regression
 1. Linear Regression
+    StringIndexer: เป็น Transformer ใน PySpark ML ที่ใช้ในการแปลงข้อมูลประเภทข้อความเป็นค่าตัวเลขโดยอัตโนมัติ 
+    โดยจะสร้างดัชนี (index) สำหรับค่าที่ไม่ซ้ำกันในคอลัมน์
+        handleInvalid: กำหนดวิธีการจัดการกับค่าที่ไม่ถูกต้องหรือไม่รู้จัก เช่น:
+            "skip": ข้ามค่าที่ไม่รู้จัก
+            "error": ยกเว้นข้อผิดพลาด (default)
+            "keep": เก็บค่าที่ไม่รู้จักไว้ในหมวดหมู่ใหม่
+        stringOrderType: กำหนดลำดับการจัดอันดับของค่าข้อมูลในคอลัมน์ เช่น:
+            "frequency_desc": จัดอันดับตามความถี่ในลำดับที่ลดลง
+            "alphabetic": จัดอันดับตามตัวอักษร
+    LinearRegression parameter
+        maxIter: จำนวนรอบสูงสุดในการฝึกอบรมโมเดล (Iterations) ซึ่งในที่นี้ตั้งไว้ที่ 10
+        regParam: ค่าพารามิเตอร์ (Regularization parameter) 
+        ใช้เพื่อป้องกันการเกิด overfitting โดยค่าที่กำหนดในที่นี้คือ 0.1
+        elasticNetParam: ค่าพารามิเตอร์ที่ใช้ในการควบคุมการผสมระหว่าง L1 และ L2 Regularization
+        tol: ระดับความแม่นยำที่ใช้ในการหยุดการฝึกอบรม เมื่อการปรับปรุงในรอบการฝึกอบรมต่ำกว่าค่านี้
+        fitIntercept: ตัวเลือกว่าควรจะคำนวณค่าตัด (intercept) หรือไม่ (default คือ True)
+        standardization: ตัวเลือกว่าควรจะทำการปรับสเกลฟีเจอร์หรือไม่ (default คือ True)
+        weightCol: ชื่อคอลัมน์ที่ใช้ในการกำหนดน้ำหนักให้กับตัวอย่างข้อมูล หากต้องการใช้น้ำหนักในการฝึกอบรม
+        solver: ตัวเลือกในการกำหนดอัลกอริธึมที่ใช้ในการหาค่าพารามิเตอร์ เช่น "auto", "normal", "l-bfgs"
+    RegressionEvaluator
+        metricName: กำหนดประเภทของค่าที่จะใช้ในการประเมินโมเดล เช่น:
+            "rmse": คำนวณ Root Mean Squared Error
+            "r2": คำนวณ R2 (Coefficient of Determination)
+            "mae": คำนวณ Mean Absolute Error
+            "mse": คำนวณ Mean Squared Error
+    sns.Implot(): โดย line_kws คือ regression ถูกสร้างขึ้นโดยฟังก์ชัน sns.lmplot() ของ Seaborn 
+    ซึ่งจะทำการคำนวณเส้น regression line โดยอัตโนมัติ
+2. Decision Regression
+    OneHotEncoder:
+        handleInvalid เหมือน StringIndexer เช่น handleInvalid="skip"
+        dropLast=False
