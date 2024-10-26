@@ -9,6 +9,7 @@ High-Level Spark
 Structured Streaming
 Source and Sink
 Event Time Watermarking
+---------------------------------
 Visualization
 Data Analytics and Machine Learning
 Clustering
