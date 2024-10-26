@@ -1,17 +1,14 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import split, col, current_timestamp, window
 
-# สร้าง Spark Session
 spark = SparkSession.builder \
     .appName("WindowedWordCount") \
     .getOrCreate()
 
-# กำหนด DataFrame Streaming จาก socket source
-# เปลี่ยน "localhost" และ "9999" เป็นโฮสต์และพอร์ตของคุณ
 lines = spark.readStream \
     .format("socket") \
     .option("host", "localhost") \
-    .option("port", 9999) \
+    .option("port", 7988) \
     .load()
 
 # ประมวลผลข้อมูล: แยกคำจากคอลัมน์ value, เพิ่มคอลัมน์ timestamp, และตั้ง watermark
