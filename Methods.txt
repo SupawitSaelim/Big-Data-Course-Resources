@@ -123,3 +123,38 @@ Classification
     confusion_matrix.show()
 
 ------------------------------------------------------------------------------------------------------
+Recommendation System
+    ALS Parameters
+        implicitPrefs: หากเป็นค่าจริง (True) จะใช้ข้อมูลที่ให้คะแนนแบบไม่ชัดเจน (implicit feedback) เช่น 
+        การดูรายการหรือการคลิก แทนที่จะเป็นคะแนนที่ชัดเจน ค่าเริ่มต้นคือ False
+        alpha: ค่าพารามิเตอร์ที่ใช้ในการปรับน้ำหนักให้กับ implicit feedback เมื่อใช้ implicitPrefs=True 
+        ค่าที่สูงขึ้นจะแสดงถึงความมั่นใจที่สูงขึ้นในความหมายของการให้คะแนน
+        rank: ระดับของ latent factors (ความซับซ้อนของโมเดล) ที่ใช้ในการทำการคาดการณ์ 
+        ค่าเริ่มต้นคือ 10 โดยค่านี้สามารถปรับได้ตามขนาดของข้อมูลและความต้องการของโมเดล
+        maxUserIterations: จำนวนรอบสูงสุดที่ ALS จะใช้ในการอัปเดต latent factors สำหรับผู้ใช้ ค่าเริ่มต้นคือ 10
+        maxItemIterations: จำนวนรอบสูงสุดที่ ALS จะใช้ในการอัปเดต latent factors สำหรับรายการ ค่าเริ่มต้นคือ 10
+        seed: ค่าตัวเลขที่ใช้ในการสุ่มเพื่อให้ได้ผลลัพธ์ที่สามารถทำซ้ำได้
+        als = ALS(
+            maxIter=10,                  # จำนวนรอบสูงสุดในการฝึกอบรม
+            regParam=0.1,                # พารามิเตอร์ Regularization
+            userCol="user_id",           # คอลัมน์ที่ใช้ระบุผู้ใช้
+            itemCol="book_id",           # คอลัมน์ที่ใช้ระบุรายการ
+            ratingCol="rating",           # คอลัมน์ที่ใช้ระบุคะแนน
+            coldStartStrategy="drop",     # กลยุทธ์การจัดการข้อมูล cold-start
+            implicitPrefs=False,          # ใช้ข้อมูล feedback ที่ชัดเจนหรือไม่
+            alpha=1.0,                   # ค่าพารามิเตอร์สำหรับ implicit feedback
+            rank=10,                     # ระดับของ latent factors
+            maxUserIterations=10,        # จำนวนรอบสูงสุดสำหรับผู้ใช้
+            maxItemIterations=10,        # จำนวนรอบสูงสุดสำหรับรายการ
+            seed=42                      # ค่าตัวเลขที่ใช้ในการสุ่ม
+        )
+    ฟังก์ชันเพิ่มเติมใน ALS
+        recommendForUserSubset(userSubset, numItems):
+            userSubset: DataFrame ที่ประกอบไปด้วยคอลัมน์ user_id ที่ต้องการแนะนำ
+            numItems: จำนวนรายการที่จะถูกแนะนำให้กับผู้ใช้ใน userSubset
+        recommendForItemSubset(itemSubset, numUsers):
+            itemSubset: DataFrame ที่ประกอบไปด้วยคอลัมน์ book_id ที่ต้องการแนะนำ
+            numUsers: จำนวนผู้ใช้ที่จะถูกแนะนำให้กับรายการใน itemSubset
+        transform(df): ฟังก์ชันนี้ใช้เพื่อคาดการณ์คะแนนสำหรับ DataFrame ที่มีข้อมูลผู้ใช้และรายการ 
+        ซึ่งใช้คอลัมน์ที่กำหนดใน userCol, itemCol, และ ratingCol
+            predictions = model.transform(test_data)
