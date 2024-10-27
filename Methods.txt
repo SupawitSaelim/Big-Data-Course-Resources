@@ -97,3 +97,29 @@ Regression
     OneHotEncoder:
         handleInvalid เหมือน StringIndexer เช่น handleInvalid="skip"
         dropLast=False
+
+------------------------------------------------------------------------------------------------------
+Classification
+1. Logistic Regression Parameter
+        maxIter: กำหนดจำนวนรอบสูงสุดที่ใช้ในการฝึกโมเดล
+        regParam: ค่าพารามิเตอร์การปรับน้ำหนัก (regularization) เพื่อป้องกันการเกิด overfitting
+        elasticNetParam: ใช้เพื่อผสมระหว่าง L1 และ L2 regularization (0 = L2, 1 = L1)
+        tol: ค่า tolerance กำหนดความแม่นยำในการหยุดฝึกเมื่อโมเดลไม่มีการเปลี่ยนแปลงมาก
+            1e-4: หากความแม่นยำในการทำนายเปลี่ยนแปลงน้อยกว่าค่านี้ โมเดลจะหยุดการฝึก ช่วยประหยัดเวลา
+            1e-6: โมเดลจะฝึกจนได้ความแม่นยำสูงขึ้น แต่จะใช้เวลาเพิ่มมากขึ้น
+        threshold: ค่าความน่าจะเป็น (probability threshold) ที่ใช้แบ่งประเภท
+            threshold = 0.5 หากความน่าจะเป็นมากกว่า 0.5 จะจัดเป็น class หนึ่ง เช่น "1"
+        aggregationDepth = 5: เพิ่มความลึก tree สำหรับข้อมูลขนาดใหญ่ ประมวลผลแม่นยำมากขึ้น (ค่าเริ่มต้น = 2)
+2. Decision Tree Classifier Parameter เช่น (labelCol="status_type_ind", featuresCol="features", maxDepth=10)
+        maxDepth: กำหนดความลึกสูงสุดของต้นไม้เพื่อควบคุมความซับซ้อนของโมเดล (ค่าเริ่มต้นคือ 5)
+        maxBins: กำหนดจำนวน bin สูงสุดสำหรับฟีเจอร์แบบ categorical
+        minInstancesPerNode: จำนวนตัวอย่างขั้นต่ำที่ต้องการใน node เพื่อให้สร้างการแบ่งได้ (default = 1)
+        minInfoGain: ค่าข้อมูลที่น้อยที่สุดที่ต้องการให้ node แตกแขนง
+        impurity: เลือกเกณฑ์ในการแบ่งข้อมูล เช่น "gini" หรือ "entropy"
+ตัวอย่างการสร้าง Confusion Matrix
+    from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+    evaluator = MulticlassClassificationEvaluator(labelCol="status_type_ind", predictionCol="prediction")
+    confusion_matrix = predictions.groupBy("status_type_ind", "prediction").count()
+    confusion_matrix.show()
+
+------------------------------------------------------------------------------------------------------

@@ -20,19 +20,14 @@ encoder_reactions = OneHotEncoder(inputCol="num_reactions_ind", outputCol="num_r
 encoder_loves = OneHotEncoder(inputCol="num_loves_ind", outputCol="num_loves_encoded")
 
 assembler = VectorAssembler(inputCols=["num_reactions_encoded", "num_loves_encoded"], outputCol="features")
-
 dt = DecisionTreeRegressor(featuresCol="features", labelCol="num_loves_ind")
-
 pipeline = Pipeline(stages=[encoder_reactions, encoder_loves, assembler, dt])
 
 train_data, test_data = indexed_data.randomSplit([0.8, 0.2], seed=1234)
-
 dt_model = pipeline.fit(train_data)
 
 predictions = dt_model.transform(test_data)
-
 predictions.select("num_loves_ind", "prediction").show(5)
-
 evaluator = RegressionEvaluator(labelCol="num_loves_ind", predictionCol="prediction")
 
 r2 = evaluator.setMetricName("r2").evaluate(predictions)
