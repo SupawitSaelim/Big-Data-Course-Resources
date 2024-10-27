@@ -52,3 +52,11 @@ item_subset_df = df.select("book_id").distinct()
 item_subset_df = item_subset_df.filter(item_subset_df.book_id.isin([101, 102]))  
 item_recommendations = model.recommendForItemSubset(item_subset_df, 5)
 item_recommendations.show(truncate=False)
+
+
+'''
+##### using pipeline ##############
+from pyspark.ml import Pipeline
+pipeline = Pipeline(stages=[als])
+model = pipeline.fit(train)
+'''
