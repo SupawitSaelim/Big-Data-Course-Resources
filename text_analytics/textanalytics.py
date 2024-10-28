@@ -66,3 +66,9 @@ evaluator = MulticlassClassificationEvaluator(labelCol="Rating", predictionCol="
 # คำนวณและแสดงความแม่นยำ
 accuracy = evaluator.evaluate(predictions)
 print(f"Test Accuracy = {accuracy}")
+
+'''
+โค้ดนี้ทำการวิเคราะห์และจำแนกประเภทความคิดเห็น (reviews) โดยใช้วิธีการทำงานของโมเดล Machine Learning
+โดยเฉพาะ Logistic Regression พร้อมทั้งมีการแปลงและเตรียมข้อมูลก่อนการฝึกโมเดล โดยมีการใช้ Pipeline 
+เพื่อจัดการกับขั้นตอนต่างๆ ในการประมวลผลข้อมูล
+'''
