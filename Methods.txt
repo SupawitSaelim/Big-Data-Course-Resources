@@ -1,5 +1,10 @@
 ถ้ามีปัญหาครั้งรันครั้งแรกเรื่อง port = .config("spark.driver.port", "4040")
 
+pip show {library}, pip install {library=={version}}, pip uninstall {library}
+pmdarima(v.) = 2.0.4
+numpy(v.) = 1.26.4
+graphframes==0.6
+
 Save model:
     model.write().overwrite().save("path/to/save/fpgrowth_model")
 
@@ -190,10 +195,6 @@ Recommendation System
         ซึ่งใช้คอลัมน์ที่กำหนดใน userCol, itemCol, และ ratingCol
             predictions = model.transform(test_data)
 -----------------------------------------------------------------------------------------------------
-pip show {library}, pip install {library=={version}}, pip uninstall {library}
-pmdarima(v.) = 2.0.4
-numpy(v.) = 1.26.4
-
 Time Series
     adf_test = ADFTest(alpha=0.05, max_d=2, autolag='AIC', regression='ct')
         max_d: กำหนดจำนวนสูงสุดของการแตกต่างที่อาจจะทำได้ในระหว่างการทดสอบ เพื่อให้อนุกรมเวลานั้นเป็นสถานี (df=2)
