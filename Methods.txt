@@ -1,5 +1,16 @@
 ถ้ามีปัญหาครั้งรันครั้งแรกเรื่อง port = .config("spark.driver.port", "4040")
 
+Save model:
+    model.write().overwrite().save("path/to/save/fpgrowth_model")
+
+Load model:
+    from pyspark.ml.recommendation import ALSModel
+    # โหลดโมเดล ALS ที่เคยบันทึกไว้
+    loaded_model = ALSModel.load("path/to/save/als_model")
+ใน PySpark โมเดลไม่สามารถเซฟเป็นไฟล์เดี่ยวๆ ได้ เนื่องจากโมเดลถูกออกแบบให้ทำงานในระบบกระจาย 
+(distributed system) และ Spark จะเก็บข้อมูลโมเดลที่เซฟไว้ในรูปแบบโฟลเดอร์ที่ประกอบด้วยหลายไฟล์ย่อย 
+ซึ่งรวมถึงข้อมูลพารามิเตอร์และ metadata ที่จำเป็นสำหรับการรีโหลดโมเดลในอนาคต
+
 
 ---------------------------------------------------------------------------------------------
 Clustering
@@ -8,14 +19,14 @@ Clustering
     df.describe().show(): สรุปข้อมูลทางสถิติของ DataFrame
 การจัดการคอลัมน์ (Column Manipulation)
     df.select("column1", "column2").show(): เลือกคอลัมน์ที่ต้องการ
-    df = df.withColumn("new_column", col("existing_column") * 2)
+    df = df.withColumn("new_column", col("existing_column") * 2) #สร้างคอลัมน์ใหม่ที่มีค่าเป็น 2 เท่า
     df = df.drop("column_name")
 การกรองข้อมูล (Data Filtering)
     df_filtered = df.filter(df.column_name > 10)
 การจัดกลุ่มข้อมูล (Data Aggregation)
     df.groupBy("column_name").count().show(): การจัดกลุ่มข้อมูลและการใช้ฟังก์ชันรวม
     from pyspark.sql import functions as F: ใช้ฟังก์ชันการรวมที่ซับซ้อนขึ้น
-    df.groupBy("column_name").agg(F.avg("value_column")).show()
+    df.groupBy("column_name").agg(F.avg("value_column")).show()  คำนวณค่าเฉลี่ย
 การเขียนข้อมูล (Data Writing)
     df.write.csv("./output.csv", header=True)
 การรวม DataFrame (Data Joining)
@@ -23,8 +34,22 @@ Clustering
 การเปลี่ยนรูป DataFrame (Data Transformation)
     df_combined = df1.union(df2)
     df_unique = df.distinct(): ลบแถวที่ซ้ำ
+ฟังก์ชันเพิ่มเติม
+    .agg() สามารถใช้ร่วมกับฟังก์ชันการรวบรวม (aggregation functions) ต่าง ๆ เช่น:
+    avg(): คำนวณค่าเฉลี่ย
+    count(): นับจำนวนแถวในกลุ่ม
+    sum(): หาผลรวม
+    max(): ค่ามากที่สุด
+    min(): ค่าน้อยที่สุด
+    collect_list(): รวบรวมค่าทั้งหมดในกลุ่มเป็นลิสต์
+ตัวอย่าง
+    data = [("Alice", 1), ("Bob", 2), ("Alice", 3), ("Bob", 4)]
+    df = spark.createDataFrame(data, ["Name", "Value"])
 
-ค่าตั้งค่าใน spark.read.csv()
+    # คำนวณค่าเฉลี่ยตามชื่อ
+    average_df = df.groupBy("Name").agg(avg("Value").alias("Average_Value"))
+
+ค่าตั้งค่าใน spark.read.csv()  อ่านมาเป็น DataFrame
     header=True: ถ้าตั้งค่าเป็น True จะบอกให้ PySpark ว่าแถวแรกของไฟล์ CSV เป็นชื่อคอลัมน์ (header)
     inferSchema=True: ถ้าตั้งค่าเป็น True PySpark จะพยายามเดาประเภทข้อมูลของแต่ละคอลัมน์จากข้อมูลในไฟล์ CSV
                     : ถ้าตั้งค่าเป็น False จะถือว่าทุกคอลัมน์เป็น StringType โดยอัตโนมัติ
@@ -49,7 +74,7 @@ Clustering
     DateType(): เก็บวันที่ เช่น 2024-10-26 date
     TimestampType(): เก็บวันที่และเวลาพร้อมเขตเวลา เช่น 2024-10-26 13:45:00 timestamp
     BooleanType(): เก็บข้อมูล Boolean (True/False) เช่น True, False boolean
-    ArrayType(elementType): เก็บข้อมูลเป็น Array โดยกำหนดประเภทของข้อมูลได้ เช่น ArrayType(StringType()) array
+    ArrayType(elementType): เก็บข้อมูลเป็น Array โดยกำหนดประเภทของข้อมูลได้ เช่น ArrayType(StringType()) 
 
 KMeans มีพารามิเตอร์หลักที่นิยมใช้ดังนี้:
     kmeans = KMeans(featuresCol="scaledFeatures", predictionCol="prediction_col", k=i)
@@ -113,7 +138,8 @@ Classification
         threshold: ค่าความน่าจะเป็น (probability threshold) ที่ใช้แบ่งประเภท
             threshold = 0.5 หากความน่าจะเป็นมากกว่า 0.5 จะจัดเป็น class หนึ่ง เช่น "1"
         aggregationDepth = 5: เพิ่มความลึก tree สำหรับข้อมูลขนาดใหญ่ ประมวลผลแม่นยำมากขึ้น (ค่าเริ่มต้น = 2)
-2. Decision Tree Classifier Parameter เช่น (labelCol="status_type_ind", featuresCol="features", maxDepth=10)
+2. Decision Tree Classifier Parameter เช่น (labelCol="status_type_ind", \
+                                           featuresCol="features", maxDepth=10)
         maxDepth: กำหนดความลึกสูงสุดของต้นไม้เพื่อควบคุมความซับซ้อนของโมเดล (ค่าเริ่มต้นคือ 5)
         maxBins: กำหนดจำนวน bin สูงสุดสำหรับฟีเจอร์แบบ categorical
         minInstancesPerNode: จำนวนตัวอย่างขั้นต่ำที่ต้องการใน node เพื่อให้สร้างการแบ่งได้ (default = 1)
@@ -121,7 +147,8 @@ Classification
         impurity: เลือกเกณฑ์ในการแบ่งข้อมูล เช่น "gini" หรือ "entropy"
 ตัวอย่างการสร้าง Confusion Matrix
     from pyspark.ml.evaluation import MulticlassClassificationEvaluator
-    evaluator = MulticlassClassificationEvaluator(labelCol="status_type_ind", predictionCol="prediction")
+    evaluator = MulticlassClassificationEvaluator(labelCol="status_type_ind", \
+                predictionCol="prediction")
     confusion_matrix = predictions.groupBy("status_type_ind", "prediction").count()
     confusion_matrix.show()
 
@@ -177,7 +204,7 @@ Time Series
         alpha:
             0.01: ระดับนัยสำคัญที่เข้มงวด ใช้สำหรับการทดสอบที่ต้องการความมั่นใจสูงในการปฏิเสธสมมติฐานที่เป็นศูนย์
             0.05: ค่าเริ่มต้นที่นิยม ใช้ทั่วไปในงานวิจัย สมดุลระหว่างความเสี่ยงในการปฏิเสธสมมติฐานที่เป็นศูนย์และความเชื่อมั่น
-            0.10: ระดับนัยสำคัญที่ผ่อนคลาย ใช้เมื่อมีความยืดหยุ่นมากขึ้นในผลการทดสอบ หรือเมื่อสามารถรับความเสี่ยงได้มากขึ้น
+            0.10: ระดับนัยสำคัญที่ผ่อนคลาย  หรือเมื่อสามารถรับความเสี่ยงได้มากขึ้น
 
     การอ่านค่า ถ้าใช้ alpha = 0.05 และได้ p-value = 0.03:
             เนื่องจาก 0.03 ≤ 0.05 จึง ปฏิเสธ H0 อนุกรมเวลาเป็น สถานี
@@ -231,5 +258,61 @@ Time Series
         alpha=0.05,  หาก return_conf_int=True คุณสามารถตั้งค่า alpha เพื่อควบคุมความกว้างของช่วง
         dynamic=False หากตั้งค่าเป็น True จะใช้การคาดการณ์ที่ผ่านมาของการคาดการณ์ที่ได้จากโมเดล 
         (dynamic forecasts) แทนที่จะใช้ค่า actual ของข้อมูลทดสอบ
+
 -----------------------------------------------------------------------------------------------------
 Association Rule
+    minSupport: โดยทั่วไปอยู่ระหว่าง 0.01 ถึง 0.1 ขึ้นอยู่กับขนาดข้อมูล
+    minConfidence: มักจะอยู่ระหว่าง 0.5 ถึง 0.8 ขึ้นอยู่กับความต้องการในการสร้างกฎที่มีความเชื่อมั่นสูง
+    FPGrowth():
+        isDistributed=True ถ้าตั้งเป็น True, โมเดลจะทำงานในลักษณะ distributed ซึ่งจะช่วยให้ประมวลผลข้อมูล
+        ขนาดใหญ่ได้อย่างมีประสิทธิภาพมากขึ้น
+        numPartitions=5  # จำนวนพาร์ติชันที่จะใช้ในการประมวลผล
+        maxItemsets=2  # จำกัดชุดรายการที่เกิดขึ้นบ่อยที่จะถูกแสดงผล ตัวอย่าง
+            itemset	              freq
+            {milk}	                4
+            {bread}	                4
+            {butter}	            3
+            {milk, bread}	        3
+            {milk, butter}	        3
+            {bread, butter}	        2
+            {milk, bread, butter}	2
+            แต่ถ้าเราใช้ : 
+            itemset	              freq
+            {milk}	                4
+            {bread}	                4
+
+    นอกจาก model.freqItemsets.show(10)
+    model.associationRules.show(truncate=False) # แสดงกฎความสัมพันธ์ที่ได้จากการวิเคราะห์
+
+    นอกจากการใช้ confidence
+    model.associationRules.filter(model.associationRules.confidence > 0.4)
+        lift:  ค่านี้บอกถึงระดับความสัมพันธ์ระหว่าง antecedent และ consequent สูงกว่า 1 แสดงว่า antecedent และ 
+               consequent มีความสัมพันธ์เชิงบวกกัน
+               # กรองกฎที่มีค่า lift สูงกว่า 1.2
+                high_lift_rules = model.associationRules.filter(model.associationRules.lift > 1.2)
+                high_lift_rules.show(truncate=False)
+        antecedent: ใช้ในการกรองกฎที่มีสินค้าหรือกลุ่มสินค้าที่ต้องการ  เช่น มีสินค้า "bread"
+                # กรองกฎที่ antecedent มีสินค้า "bread"
+                bread_rules = model.associationRules.filter \
+                (array_contains(model.associationRules.antecedent, "bread"))
+                bread_rules.show(truncate=False)
+        confidence & lift: 
+                .filter((model.associationRules.confidence>0.6)&(model.associationRules.lift>1.5))
+
+    ในกรณีที่ต้องการให้โมเดลทำนายผล:
+        ใช้ transform แทน withColumn ในการสร้างคอลัมน์ prediction เป็นเพราะว่า transform 
+        เป็นเมธอดเฉพาะสำหรับโมเดลใน Spark ที่จะนำโมเดลที่ผ่านการฝึก (trained model) 
+        มาประยุกต์กับข้อมูลใหม่ทั้งหมด และสร้างผลลัพธ์หรือการทำนายบน DataFrame ใหม่ตามโมเดลที่ฝึกมาแล้ว
+
+-----------------------------------------------------------------------------------------------------
+Graph
+    pageRank():
+        resetProbability=0-1 : ค่าที่ต่ำกว่าอาจทำให้โหนดที่ไม่สำคัญมี PageRank สูงขึ้น ขณะที่ค่าที่สูงกว่าจะเน้นโหนดที่มีการเชื่อมโยงมากกว่า
+        maxIter=0-10: จำนวนสูงสุดของรอบการคำนวณ ค่าที่สูงขึ้นอาจช่วยให้ค่าที่คำนวณออกมามีความแม่นยำมากขึ้น แต่ก็ใช้เวลามากขึ้นด้วย
+        tol=0.001: ค่าที่ใช้ในการควบคุมความแม่นยำในการหยุดการคำนวณ หากตั้งค่าสูงจะทำให้การคำนวณหยุดเร็วกว่าปกติ แต่ก็อาจส่งผลให้ความแม่นยำลดลง
+        sourceId='Alice': ระบุโหนดต้นทางที่ต้องการจะคำนวณ PageRank สามารถใช้ในการวิเคราะห์โหนดเฉพาะได้
+    connectedComponents(maxIter=10):
+    bfs():
+        edgeFilter="relation = 'Friend'" เพื่อค้นหาเฉพาะเส้นทางที่มีความสัมพันธ์เป็นเพื่อน
+        vertexFilter="age < 50" เพื่อค้นหาเฉพาะโหนดที่มีอายุน้อยกว่า 50
+

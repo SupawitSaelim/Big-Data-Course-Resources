@@ -1,7 +1,11 @@
 #python 3.10.11
 #java 11.0.24 
+
 pmdarima==2.0.4
 numpy==1.26.4
+graphframes==0.6
+pyspark==3.5.3
 matplotlib
 seaborn
 pandas
+networkx 
