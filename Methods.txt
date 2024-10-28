@@ -317,3 +317,39 @@ Graph
         edgeFilter="relation = 'Friend'" เพื่อค้นหาเฉพาะเส้นทางที่มีความสัมพันธ์เป็นเพื่อน
         vertexFilter="age < 50" เพื่อค้นหาเฉพาะโหนดที่มีอายุน้อยกว่า 50
 
+-----------------------------------------------------------------------------------------------------
+Text Analysis
+    นอกจาก trim() แล้ว ใน PySpark
+        data.select(lower(data['ReviewText']).alias('ReviewText'), ...) แปลงข้อความในคอลัมน์ให้เป็นตัวพิมพ์เล็ก
+        data.select(upper(data['ReviewText']).alias('ReviewText'), ...) แปลงข้อความในคอลัมน์ให้เป็นตัวพิมพ์ใหญ่
+        data.withColumn('ReviewText', regexp_replace(data['ReviewText'], "bad_word", "good_word"))
+            แทนที่ค่าที่ระบุในคอลัมน์ด้วยค่าที่ต้องการ
+        data.withColumn('ShortReview', substring(data['ReviewText'], 1, 100)) เพื่มคอลลัมน์ตัดข้อความให้เหลือแค่ส่วนที่ต้องการ
+        data.withColumn('ReviewLength', length(data['ReviewText'])) เพิ่มคอลลัมน์คำนวณความยาวของข้อความในคอลัมน์
+        data.withColumn('Words', split(data['ReviewText'], ' '))  แยกข้อความในคอลัมน์  (เช่น เว้นวรรค)
+        data.dropna(subset=['ReviewText', 'Rating']) ลบแถวที่มีค่าขาดหาย (null) ในคอลัมน์ที่ระบุ
+        data.fillna({'ReviewText': 'No Review', 'Rating': 0}) เติมค่าที่ขาดหายด้วยค่าที่ระบุ
+        data.withColumn('Rating', data['Rating'].cast(IntegerType())) แปลงประเภทข้อมูล
+    
+    Tokenizer():
+        minTokenLength=3 เช่น ความยาวของของ "fox" → 3 ตัวอักษร ถือว่าผ่าน
+    
+    StopWordsRemover():
+        stopWords=custom_stop_words: stop words ที่จะใช้ในการลบคำที่ไม่ต้องการจากข้อความ หากไม่ระบุจะใช้รายการ stop words ที่จัดเตรียมไว้ใน PySpark
+            custom_stop_words = ["the", "is", "at", "which", "on"]
+            stop_word_remover = StopWordsRemover(inputCol="ReviewTextWords", outputCol="MeaningfulWords", stopWords=custom_stop_words)
+        caseSensitive=True:  หากตั้งค่าเป็น True จะทำให้การเปรียบเทียบเป็น case-sensitive
+
+    HashingTF():
+        numFeatures=262144: กำหนดจำนวนฟีเจอร์ที่ใช้ในการแปลงข้อมูล
+        binary=True: หากตั้งค่าเป็นTrueจะทำให้การแปลงข้อมูลเป็น binary โดยจะนับแค่คำว่า "มี" หรือ "ไม่มี" แทนการนับจำนวนครั้งที่คำปรากฏ
+        hashingTF="murmur3": กำหนดวิธีการสร้างค่าแฮช ซึ่งใน PySpark จะใช้ฟังก์ชันแฮชที่มีอยู่แล้ว
+    
+    MulticlassClassificationEvaluator():
+        metricName:
+            "accuracy": ความแม่นยำของโมเดล
+            "f1": F1 Score ซึ่งเป็นค่าเฉลี่ยแบบฮาร์มอนิกของ Precision และ Recall
+            "weightedPrecision": Precision ที่ชั่งน้ำหนักตามขนาดของแต่ละคลาส
+            "weightedRecall": Recall ที่ชั่งน้ำหนักตามขนาดของแต่ละคลาส
+            "logLoss": ค่า Logarithmic Loss
+        alpha=0.5
