@@ -11,7 +11,8 @@ Load model:
 (distributed system) และ Spark จะเก็บข้อมูลโมเดลที่เซฟไว้ในรูปแบบโฟลเดอร์ที่ประกอบด้วยหลายไฟล์ย่อย 
 ซึ่งรวมถึงข้อมูลพารามิเตอร์และ metadata ที่จำเป็นสำหรับการรีโหลดโมเดลในอนาคต
 
-
+เขียน DataFrame เป็น csv
+    edges_grouped.write.mode("overwrite").option("header", True).csv('/content/new_data.csv')
 ---------------------------------------------------------------------------------------------
 Clustering
 การจัดการ DataFrame
