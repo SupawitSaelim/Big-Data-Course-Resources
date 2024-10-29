@@ -149,3 +149,12 @@ incorrect_word_frequencies.show(10)
 
 
 spark.stop()
+
+
+'''
+การเซฟและโหลดโมเดล Logistic Regression
+lr_model.save("logistic_regression_model")
+from pyspark.ml.classification import LogisticRegressionModel
+# โหลดโมเดล
+loaded_lr_model = LogisticRegressionModel.load("logistic_regression_model")
+'''

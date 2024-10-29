@@ -76,3 +76,10 @@ predictions.show(truncate=False)
 
 # ปิด Spark Session
 spark.stop()  
+
+
+'''
+from pyspark.ml.fpm import FPGrowthModel
+model.save("fpgrowth_model")
+loaded_model = FPGrowthModel.load("fpgrowth_model")
+'''
