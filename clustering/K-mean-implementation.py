@@ -10,7 +10,7 @@ spark = SparkSession.builder \
     .appName("KMeans Clustering") \
     .getOrCreate()
 
-df = spark.read.csv("./Clustering/fb_live_thailand.csv",\
+df = spark.read.csv("./fb_live_thailand.csv",\
                     header=True, inferSchema=True)
 df = df.select(df.num_sads.cast(DoubleType()),df.num_reactions.cast(DoubleType()))
 
@@ -64,11 +64,22 @@ print("Silhouette with squared euclidean distance =", str(silhouette))
 clustered_data_pd = predictions.toPandas()
 
 # Visualizing the results
-plt.scatter(clustered_data_pd["num_reactions"], \
-            clustered_data_pd["num_sads"], \
-            c = clustered_data_pd["prediction_col"])
-plt.xlabel("num_reactions")
-plt.ylabel("num_sads")
-plt.title("K-means Clustering")
-plt.colorbar().set_label("Cluster")
+# plt.scatter(clustered_data_pd["num_reactions"], \
+#             clustered_data_pd["num_sads"], \
+#             c = clustered_data_pd["prediction_col"])
+# plt.xlabel("num_reactions")
+# plt.ylabel("num_sads")
+# plt.title("K-means Clustering")
+# plt.colorbar().set_label("Cluster")
+# plt.show()
+
+# Count the number of data points in each cluster
+cluster_counts = clustered_data_pd["prediction_col"].value_counts().sort_index()
+# Plotting the bar chart
+plt.bar(cluster_counts.index, cluster_counts.values, color='skyblue')
+plt.xlabel("Cluster")
+plt.ylabel("Number of Points")
+plt.title("Number of Points per Cluster")
+plt.xticks(cluster_counts.index)  # To ensure the x-ticks match the cluster numbers
 plt.show()
+
